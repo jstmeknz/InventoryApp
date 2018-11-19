@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Inventory App</string>
+    <string name="insert_dummy_data">Insert Dummy Data</string>
+    <string name="Delete_All">Delete All</string>
+
+    <!-- book style options -->
+    <string name="book_style_hardback">Hardback</string>
+    <string name="book_style_paperback">Paperback</string>
+    <string name="book_style_audio">Audio Book</string>
+    <string name="book_style_download">Download</string>
+    <string name="book_style_unknown">Unknown</string>
+
+    <!-- Title for the activity to add a new book [CHAR LIMIT=20] -->
+    <string name="editor_activity_title_new_book">Add Book</string>
+
+    <!-- Label for editor menu option to save book and leave editor [CHAR LIMIT=20] -->
+    <string name="action_save">Save</string>
+
+    <!-- Label for editor overflow menu option that deletes the current book [CHAR LIMIT=20] -->
+    <string name="action_delete">Delete</string>
+
+    <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
+    <string name="category_book">Book</string>
+
+    <!-- Text hint for TITLE field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_book_title">Title</string>
+
+    <!-- Text hint for author name field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_author_name">Weight</string>
+
+    <!-- Money symbol -->
+    <string name="money_symbol">$</string>
+
+    <string name="editor_update_error">Uh-oh... An error has occurred.</string>
+    <string name="editor_saved">Book Saved!</string>
+
+    <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
+    <string name="empty_view_title_text">It\'s a bit lonely here...</string>
+
+    <!-- Subtitle text for the empty view that prompts the user to add a book [CHAR LIMIT=50] -->
+    <string name="empty_view_subtitle_text">Get started by adding a book</string>
+    <string name="edit_book_title">Edit Book</string>
+    <string name="editor_insert_book_failed">Error</string>
+    <string name="editor_update_book_successful">Edit successful!</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit.</string>
+    <string name="editor_book_added">Add successful!</string>
+
+    <!-- Toast message in editor when current book was successfully deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_book_successful">Book deleted.</string>
+
+    <!-- Toast message in editor when current book fails to delete [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_book_failed">Error deleting book.</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current book[CHAR LIMIT=NONE] -->
+    <string name="delete_dialog_msg">Delete this book?</string>
+
+    <!-- Dialog button text for the option to confirm deleting the current book [CHAR LIMIT=20] -->
+    <string name="delete">Delete</string>
+
+    <!-- Dialog button text for the option to cancel deletion of the current book [CHAR LIMIT=20] -->
+    <string name="cancel">Cancel</string>
+
+
+    <string name="hint_book_author">Author</string>
+    <string name="hint_book_price">0.00</string>
+    <string name="hint_supplier_name">Name</string>
+    <string name="hint_supplier_phone">505-555-5055</string>
+    <string name="hint_quantity">1</string>
+
+</resources>

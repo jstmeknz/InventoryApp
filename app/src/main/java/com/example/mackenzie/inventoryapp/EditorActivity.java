@@ -1,6 +1,5 @@
 package com.example.mackenzie.inventoryapp;
 
-
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -32,19 +30,22 @@ import static com.example.mackenzie.inventoryapp.data.BookContract.BookEntry;
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
+    //log tag
     public static final String LOG_TAG = EditorActivity.class.getSimpleName();
 
+    //initializing the following:
     private static final int EXISTING_BOOK_LOADER = 0;
-    int quantity;
+    int quantity = 1;
     private Uri mCurrentBookUri;
     private EditText mBookTitleEditText;
     private EditText mBookAuthorEditText;
     private EditText mPriceEditText;
-    private Button addButton;
-    private Button subtractButton;
-    private TextView mCurrentQuantityView;
     private EditText mSupplier;
     private EditText mSupplierPhone;
+    private TextView mCurrentQuantityView;
+    private Button mAddButton;
+    private Button mSubtractButton;
+    private Button mCallButton;
     private Spinner mBookStyleSpinner;
     private int mBookStyle = BookEntry.STYLE_HARDBACK;
 
@@ -63,19 +64,24 @@ public class EditorActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         mCurrentBookUri = intent.getData();
 
+        //set title text on whether edit activity is accessed from an existing item or new.
+        //Sets reorder button in the same way
         if (mCurrentBookUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_book));
             invalidateOptionsMenu();
-
+            mCallButton = (Button) findViewById(R.id.call_button);
+            mCallButton.setVisibility(View.GONE);
         } else {
             setTitle(getString(R.string.edit_book_title));
+            mCallButton.setVisibility(View.VISIBLE);
 
             getLoaderManager().initLoader(EXISTING_BOOK_LOADER, null, this);
         }
 
+        //find views to populate with data from user input
         mBookTitleEditText = (EditText) findViewById(R.id.edit_book_title);
         mBookAuthorEditText = (EditText) findViewById(R.id.edit_book_author);
         mBookStyleSpinner = (Spinner) findViewById(R.id.spinner_style);
@@ -83,49 +89,42 @@ public class EditorActivity extends AppCompatActivity implements
         mCurrentQuantityView = (TextView) findViewById(R.id.quantity);
         mSupplier = (EditText) findViewById(R.id.edit_supplier_name);
         mSupplierPhone = (EditText) findViewById(R.id.edit_supplier_phone);
-        addButton = (Button) findViewById(R.id.add_button);
-        subtractButton = (Button) findViewById(R.id.subtract_button);
 
+        //set listeners
         mBookTitleEditText.setOnTouchListener(mTouchListener);
         mBookAuthorEditText.setOnTouchListener(mTouchListener);
         mBookStyleSpinner.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
+        setupSpinner();
+
+        //initializing buttons
+        mAddButton = (Button) findViewById(R.id.add_button);
+        mSubtractButton = (Button) findViewById(R.id.subtract_button);
+        mCallButton = (Button) findViewById(R.id.call_button);
+
+        //increment/decrement buttons
+        mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCurrentQuantityView == null) {
-                    quantity = 0;
-                    int quantityIncrement = quantity + 1;
-                    ContentValues values = new ContentValues();
-                    values.put(BookEntry.COLUMN_QUANTITY, quantity);
-                    mCurrentQuantityView.setText(String.valueOf(quantityIncrement));
-                } else {
-                    int quantity = Integer.parseInt(mCurrentQuantityView.getText().toString());
-                    int quantityIncrease = quantity + 1;
-                    ContentValues values = new ContentValues();
-                    values.put(BookEntry.COLUMN_QUANTITY, quantity);
-                    mCurrentQuantityView.setText(String.valueOf(quantityIncrease));
-                }
+                mCurrentQuantityView.setText(incrementCount());
             }
         });
-        subtractButton.setOnClickListener(new View.OnClickListener() {
+        mSubtractButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCurrentQuantityView == null) {
-                    Toast.makeText(EditorActivity.this, "Quantity cannot be negative", Toast.LENGTH_SHORT).show();
-                } else {
-                    int quantity = Integer.parseInt(mCurrentQuantityView.getText().toString());
-                    int quantityDecrement = quantity - 1;
-                    ContentValues values = new ContentValues();
-                    values.put(BookEntry.COLUMN_QUANTITY, quantity);
-                    mCurrentQuantityView.setText(String.valueOf(quantityDecrement));
+                mCurrentQuantityView.setText(decrementCount());
+            }
+        });
 
-                    mSupplier.setOnTouchListener(mTouchListener);
-                    mSupplierPhone.setOnTouchListener(mTouchListener);
-
-                    setupSpinner();
-                   
+        //Listener for reorder button in editor activity. using action_dial since it doesn't require permissions
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phoneString = mSupplierPhone.getText().toString().trim();
+                Intent supPhone = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneString, null));
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(supPhone);
                 }
             }
         });
@@ -140,6 +139,8 @@ public class EditorActivity extends AppCompatActivity implements
         mBookStyleSpinner.setAdapter(styleSpinnerAdapter);
 
         mBookStyleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            //sets listener to each option in drop down
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
@@ -156,6 +157,7 @@ public class EditorActivity extends AppCompatActivity implements
                 }
             }
 
+            //sets style to hardback if nothing is selected
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 mBookStyle = BookEntry.STYLE_HARDBACK;
@@ -163,70 +165,32 @@ public class EditorActivity extends AppCompatActivity implements
         });
     }
 
-    /**
-     * Get user input from editor and save into db
-     */
-
-    private void saveBook() {
-        //Read from input fields, use trim to eliminate leading or trailing white space
-        String titleString = mBookTitleEditText.getText().toString().trim();
-        String authorString = mBookAuthorEditText.getText().toString().trim();
-        String priceString = mPriceEditText.getText().toString().trim();
-        String currentQuantity = mCurrentQuantityView.toString();
-        String supplierString = mSupplier.getText().toString().trim();
-        String supplierPhoneString = mSupplierPhone.getText().toString().trim();
-
-        //check if this is a new book entry and make sure all fields are blank in editor
-        if (mCurrentBookUri == null &&
-                TextUtils.isEmpty(titleString) &&
-                TextUtils.isEmpty(authorString) &&
-                TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(currentQuantity) &&
-                TextUtils.isEmpty(supplierString) &&
-                TextUtils.isEmpty(supplierPhoneString) &&
-                mBookStyle == (BookEntry.STYLE_HARDBACK) &&
-                quantity == 0) {
-            return;
-        }
-
-        //Create a ContentValues object where column names are keys and
-        //attributes from the editor are the values.
-        ContentValues values = new ContentValues();
-        values.put(BookEntry.COLUMN_BOOK_TITLE, titleString);
-        values.put(BookEntry.COLUMN_BOOK_AUTHOR, authorString);
-        values.put(BookEntry.COLUMN_BOOK_STYLE, mBookStyle);
-        values.put(BookEntry.COLUMN_PRICE, priceString);
-        values.put(BookEntry.COLUMN_QUANTITY, currentQuantity);
-        values.put(BookEntry.COLUMN_SUPPLIER, supplierString);
-        values.put(BookEntry.COLUMN_SUPPLIER_PHONE, supplierPhoneString);
-
-        if (mCurrentBookUri == null) {
-            Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
-
-            //show toast depending on whether insertion was successful or not
-            if (newUri == null) {
-                //if new URI is null there was an error
-                Toast.makeText(this, getString(R.string.editor_insert_book_failed),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                //show successful toast
-                Toast.makeText(this, getString(R.string.editor_book_added),
-                        Toast.LENGTH_SHORT).show();
-            }
+    //when add button is clicked
+    public String incrementCount() {
+        int quantityCount;
+        String bookQuantity = mCurrentQuantityView.getText().toString();
+        if (bookQuantity.equalsIgnoreCase("")) {
+            quantityCount = quantity + 1;
         } else {
-            int rowsAffected = getContentResolver().update(mCurrentBookUri, values, null, null);
-
-            //shows a toast depending on if update is successful or not
-            if (rowsAffected == 0) {
-                //no rows affected means error
-                Toast.makeText(this, getString(R.string.editor_update_error),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                //otherwise, show successful toast
-                Toast.makeText(this, getString(R.string.editor_update_book_successful),
-                        Toast.LENGTH_SHORT).show();
-            }
+            quantityCount = Integer.parseInt(bookQuantity);
+            quantityCount++;
         }
+        return String.valueOf(quantityCount);
+    }
+
+    //when subtract button is clicked, will not go below 0
+    public String decrementCount() {
+        int quantityCount;
+        String bookQuantity = mCurrentQuantityView.getText().toString();
+        if (TextUtils.isEmpty(bookQuantity)) {
+            Toast.makeText(this, "Quantity cannot be negative.", Toast.LENGTH_SHORT).show();
+            return bookQuantity;
+        } else {
+            quantityCount = Integer.parseInt(bookQuantity);
+            if (quantityCount > 0)
+                quantityCount--;
+        }
+        return String.valueOf(quantityCount);
     }
 
     @Override
@@ -295,47 +259,69 @@ public class EditorActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        // If the book hasn't changed, continue with handling back button press
-        if (!mBookHasChanged) {
-            super.onBackPressed();
+    /**
+     * Get user input from editor and save into db
+     */
+    private void saveBook() {
+        //Read from input fields, use trim to eliminate leading or trailing white space
+        String titleString = mBookTitleEditText.getText().toString().trim();
+        String authorString = mBookAuthorEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
+        String currentQuantity = mCurrentQuantityView.getText().toString();
+        String supplierString = mSupplier.getText().toString().trim();
+        String supplierPhoneString = mSupplierPhone.getText().toString().trim();
+
+        //check if this is a new book entry and make sure all fields are blank in editor
+        if (mCurrentBookUri == null &&
+                TextUtils.isEmpty(titleString) &&
+                TextUtils.isEmpty(authorString) &&
+                TextUtils.isEmpty(priceString) &&
+                TextUtils.isEmpty(currentQuantity) &&
+                TextUtils.isEmpty(supplierString) &&
+                TextUtils.isEmpty(supplierPhoneString) &&
+                mBookStyle == (BookEntry.STYLE_HARDBACK) &&
+                quantity == 1) {
             return;
         }
 
-        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-        // Create a click listener to handle the user confirming that changes should be discarded.
-        DialogInterface.OnClickListener discardButtonClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // User clicked "Discard" button, close the current activity.
-                        finish();
-                    }
-                };
-        // Show dialog that there are unsaved changes
-        showUnsavedChangesDialog(discardButtonClickListener);
-    }
+        //Create a ContentValues object where column names are keys and
+        //attributes from the editor are the values.
+        ContentValues values = new ContentValues();
+        values.put(BookEntry.COLUMN_BOOK_TITLE, titleString);
+        values.put(BookEntry.COLUMN_BOOK_AUTHOR, authorString);
+        values.put(BookEntry.COLUMN_BOOK_STYLE, mBookStyle);
+        values.put(BookEntry.COLUMN_PRICE, priceString);
+        values.put(BookEntry.COLUMN_QUANTITY, currentQuantity);
+        values.put(BookEntry.COLUMN_SUPPLIER, supplierString);
+        values.put(BookEntry.COLUMN_SUPPLIER_PHONE, supplierPhoneString);
 
-    private void showUnsavedChangesDialog(
-            DialogInterface.OnClickListener discardButtonClickListener) {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        // for positive and negative buttons in dialog.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.unsaved_changes_dialog_msg);
-        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
-        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Keep editing" button, so dismiss and keep editing
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+        if (mCurrentBookUri == null) {
+            Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
+
+            //show toast depending on whether insertion was successful or not
+            if (newUri == null) {
+                //if new URI is null there was an error
+                Toast.makeText(this, getString(R.string.editor_insert_book_failed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                //show successful toast
+                Toast.makeText(this, getString(R.string.editor_book_added),
+                        Toast.LENGTH_SHORT).show();
             }
-        });
+        } else {
+            int rowsAffected = getContentResolver().update(mCurrentBookUri, values, null, null);
 
-        // Create and show the AlertDialog
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+            //shows a toast depending on if update is successful or not
+            if (rowsAffected == 0) {
+                //no rows affected means error
+                Toast.makeText(this, getString(R.string.editor_update_error),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                //otherwise, show successful toast
+                Toast.makeText(this, getString(R.string.editor_update_book_successful),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**
@@ -388,6 +374,49 @@ public class EditorActivity extends AppCompatActivity implements
         }
         // Close the activity
         finish();
+    }
+
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for positive and negative buttons in dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss and keep editing
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // If the book hasn't changed, continue with handling back button press
+        if (!mBookHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+
+        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        // Create a click listener to handle the user confirming that changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+        // Show dialog that there are unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
     }
 
     @Override
@@ -475,4 +504,5 @@ public class EditorActivity extends AppCompatActivity implements
         mSupplierPhone.setText("");
         mBookStyleSpinner.setSelection(0);
     }
+
 }

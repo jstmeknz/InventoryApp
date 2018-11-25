@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#424242</color>
+    <color name="colorPrimary">#757575</color>
     <color name="colorPrimaryDark">#004a53</color>
     <color name="colorAccent">#263238</color>
 
@@ -10,4 +10,6 @@
     <!-- Primary dark color for the editor -->
     <color name="editorColorPrimaryDark">#424242</color>
     <color name="primary_material_dark">#01d0bd</color>
+    <color name="holo_gray_light">#ff5722</color>
+
 </resources>

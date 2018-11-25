@@ -34,7 +34,6 @@ public class BookProvider extends ContentProvider {
         sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_BOOKS + "/#", BOOK_ID);
     }
 
-
     private BookDbHelper mDbHelper;
 
     @Override
@@ -71,7 +70,6 @@ public class BookProvider extends ContentProvider {
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
-
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
@@ -194,12 +192,12 @@ public class BookProvider extends ContentProvider {
         }
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
+        //checking for any changes
         int rowsUpdated = database.update(BookEntry.TABLE_NAME, values, selection, selectionArgs);
 
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
         return rowsUpdated;
     }
 
@@ -215,4 +213,5 @@ public class BookProvider extends ContentProvider {
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
     }
+
 }

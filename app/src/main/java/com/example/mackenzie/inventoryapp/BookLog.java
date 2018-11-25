@@ -35,7 +35,7 @@ public class BookLog extends AppCompatActivity implements
         setContentView(R.layout.activity_book_log);
 
         // Setup FAB to open EditorActivity
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +45,7 @@ public class BookLog extends AppCompatActivity implements
         });
 
         // Find the ListView which will be populated with data
-        final ListView bookListView = (ListView) findViewById(R.id.list);
+        ListView bookListView = findViewById(R.id.list);
 
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
@@ -53,8 +53,11 @@ public class BookLog extends AppCompatActivity implements
 
         // Setup an Adapter to create a list item for each row of data in the Cursor.
         mCursorAdapter = new BookCursorAdapter(this, null);
+
+        //Set adapter
         bookListView.setAdapter(mCursorAdapter);
 
+        //opens editor on item click with data from specific view clicked
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,7 +82,7 @@ public class BookLog extends AppCompatActivity implements
         return true;
     }
 
-    //inserts dummy data into table to show that everything is working properly when first case is tapped.
+    //adds dummy data OR deletes all entries from list
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -93,8 +96,7 @@ public class BookLog extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    //dummy data entered into table
-    //((for price, when making UI insert localized money symbol ($..)))
+    //Dummy data that will be inserted and viewed in UI
     private void insertBook() {
         ContentValues cv = new ContentValues();
         cv.put(BookEntry.COLUMN_BOOK_TITLE, " The Giver");
@@ -148,6 +150,7 @@ public class BookLog extends AppCompatActivity implements
         mCursorAdapter.swapCursor(null);
     }
 
+    //decrements total quantity from bookLog activity/item view
     public void saleQuantityCount(int id, int quantity) {
         quantity = quantity - 1;
         if (quantity >= 0) {
@@ -158,40 +161,7 @@ public class BookLog extends AppCompatActivity implements
             Toast.makeText(this, "Book count decreased", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Stock count has reached 0, please reorder", Toast.LENGTH_SHORT).show();
-
         }
     }
+
 }
-
-//
-//    Intent intent = new Intent(Intent.ACTION_SENDTO);
-//        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-//                intent.putExtra(Intent.EXTRA_SUBJECT, "Just Java Order for " + name);
-//                intent.putExtra(Intent.EXTRA_TEXT, priceMessage);
-//                if (intent.resolveActivity(getPackageManager()) != null) {
-//                startActivity(intent);
-//                }
-
-
-// mAddButton = (Button) findViewById(R.id.add_button);
-//         mSubtractButton = (Button) findViewById(R.id.subtract_button);
-//         mAddButton.setOnClickListener(new View.OnClickListener() {
-//@Override
-//public void onClick(View view) {
-//        int currentQuantity = Integer.parseInt(mQuantity.getText().toString());
-//        int increase;
-//        increase = currentQuantity + 1;
-//        mQuantity.setText(String.valueOf(increase));
-//        }
-//        });
-//
-//        mSubtractButton.setOnClickListener(new View.OnClickListener() {
-//@Override
-//public void onClick(View view) {
-//        int currentQuantity = Integer.parseInt(mQuantity.getText().toString());
-//        if (currentQuantity > 0) {
-//        int subtractQuantity = currentQuantity - 1;
-//        mQuantity.setText(String.valueOf(subtractQuantity));
-//        }
-//        }
-//        });

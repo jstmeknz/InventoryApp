@@ -3,50 +3,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:addStatesFromChildren="false"
     tools:context=".BookLog">
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/activity_margin"/>
+        android:padding="@dimen/activity_margin" />
 
     <!-- Empty view for the list -->
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/empty_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/empty_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-medium"
-            android:paddingTop="16dp"
             android:text="@string/empty_view_title_text"
-            android:textAppearance="?android:textAppearanceMedium"/>
+            android:textAppearance="?android:textAppearanceMedium" />
+
+        <ImageView
+            android:id="@+id/lonely"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lonely" />
 
         <TextView
             android:id="@+id/empty_subtitle_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/empty_title_text"
-            android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
             android:paddingTop="8dp"
             android:text="@string/empty_view_subtitle_text"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#A2AAB0"/>
-    </RelativeLayout>
+            android:textColor="#A2AAB0" />
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_book"/>
+        android:src="@drawable/ic_add_book" />
 </RelativeLayout>

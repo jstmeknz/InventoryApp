@@ -31,6 +31,7 @@ public final class BookContract {
         public static final int STYLE_PAPERBACK = 1;
         public static final int STYLE_AUDIO = 2;
         public static final int STYLE_DOWNLOAD = 3;
+
         public static final String CONTENT_LIST_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BOOKS;
         public static final String CONTENT_ITEM_TYPE =

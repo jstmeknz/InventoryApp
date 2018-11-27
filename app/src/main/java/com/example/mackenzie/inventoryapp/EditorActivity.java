@@ -69,10 +69,10 @@ public class EditorActivity extends AppCompatActivity implements
 
         //set title text on whether edit activity is accessed from an existing item or new.
         //Sets reorder button in the same way
+        mCallButton = (Button) findViewById(R.id.call_button);
         if (mCurrentBookUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_book));
             invalidateOptionsMenu();
-            mCallButton = (Button) findViewById(R.id.call_button);
             mCallButton.setVisibility(View.GONE);
         } else {
             setTitle(getString(R.string.edit_book_title));

@@ -7,6 +7,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import static com.example.mackenzie.inventoryapp.data.BookContract.BookEntry;
@@ -84,22 +85,36 @@ public class BookProvider extends ContentProvider {
 
     private Uri insertBook(Uri uri, ContentValues values) {
         String name = values.getAsString(BookEntry.COLUMN_BOOK_TITLE);
-        if (name == null) {
+
+        String author = values.getAsString(BookEntry.COLUMN_BOOK_AUTHOR);
+
+        String supplier = values.getAsString(BookEntry.COLUMN_SUPPLIER);
+
+        String supplierNumber = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
+
+        Integer quantity = values.getAsInteger(BookEntry.COLUMN_QUANTITY);
+
+        Integer style = values.getAsInteger(BookEntry.COLUMN_BOOK_STYLE);
+
+        if (TextUtils.isEmpty(name)) {
             throw new IllegalArgumentException("Book requires a title");
         }
-        String author = values.getAsString(BookEntry.COLUMN_BOOK_AUTHOR);
-        if (author == null) {
+        if (TextUtils.isEmpty(author)) {
             throw new IllegalArgumentException("Book requires author name");
         }
-//        Integer style = values.getAsInteger(BookEntry.COLUMN_BOOK_STYLE);
-//        if (style == null || !BookEntry.isValidStyle(style)) {
-//            throw new IllegalArgumentException("Book requires valid style");
-//        }
-        Integer quantity = values.getAsInteger(BookEntry.COLUMN_QUANTITY);
+        if (TextUtils.isEmpty(supplier)) {
+            throw new IllegalArgumentException("Supplier name needed");
+        }
+        if (TextUtils.isEmpty(supplierNumber)){
+            throw new IllegalArgumentException("Supplier number needed");
+        }
         if (quantity == null && quantity < 1) {
             throw new IllegalArgumentException("Book requires quantity to be listed");
         }
-
+        if (style == null || !BookEntry.isValidStyle(style)) {
+            throw new IllegalArgumentException("Book requires valid style");
+        }
+        
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         long id = database.insert(BookEntry.TABLE_NAME, null, values);

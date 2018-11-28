@@ -97,8 +97,6 @@ public class BookProvider extends ContentProvider {
 
         Integer quantity = values.getAsInteger(BookEntry.COLUMN_QUANTITY);
 
-        Integer style = values.getAsInteger(BookEntry.COLUMN_BOOK_STYLE);
-
         if (TextUtils.isEmpty(name)) {
             throw new IllegalArgumentException("Requires name");
         }
@@ -114,7 +112,6 @@ public class BookProvider extends ContentProvider {
         if (quantity == null || quantity < 0) {
             throw new IllegalArgumentException("Valid quantity required");
         }
-
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 

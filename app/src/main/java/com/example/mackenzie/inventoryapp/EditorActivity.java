@@ -50,6 +50,7 @@ public class EditorActivity extends AppCompatActivity implements
     private int mBookStyle = BookEntry.STYLE_HARDBACK;
 
     private boolean mBookHasChanged = false;
+    private boolean check = true;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -282,6 +283,7 @@ public class EditorActivity extends AppCompatActivity implements
                 mBookStyle == (BookEntry.STYLE_HARDBACK) ||
                 quantity == 1) {
                   Toast.makeText(this, "All values required!", Toast.LENGTH_SHORT).show();
+           check = false;
             return;
         }
 
@@ -304,10 +306,12 @@ public class EditorActivity extends AppCompatActivity implements
                 //if new URI is null there was an error
                 Toast.makeText(this, getString(R.string.editor_insert_book_failed),
                         Toast.LENGTH_SHORT).show();
+                check = false;
             } else {
                 //show successful toast
                 Toast.makeText(this, getString(R.string.editor_book_added),
                         Toast.LENGTH_SHORT).show();
+                check = true;
             }
         } else {
             int rowsAffected = getContentResolver().update(mCurrentBookUri, values, null, null);

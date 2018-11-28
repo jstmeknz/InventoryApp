@@ -272,15 +272,16 @@ public class EditorActivity extends AppCompatActivity implements
         String supplierPhoneString = mSupplierPhone.getText().toString().trim();
 
         //check if this is a new book entry and make sure all fields are blank in editor
-        if (mCurrentBookUri == null &&
-                TextUtils.isEmpty(titleString) &&
-                TextUtils.isEmpty(authorString) &&
-                TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(currentQuantity) &&
-                TextUtils.isEmpty(supplierString) &&
-                TextUtils.isEmpty(supplierPhoneString) &&
-                mBookStyle == (BookEntry.STYLE_HARDBACK) &&
+//        if (mCurrentBookUri == null &&
+              if  (TextUtils.isEmpty(titleString) ||
+                TextUtils.isEmpty(authorString) ||
+                TextUtils.isEmpty(priceString) ||
+                TextUtils.isEmpty(currentQuantity) ||
+                TextUtils.isEmpty(supplierString) ||
+                TextUtils.isEmpty(supplierPhoneString) ||
+                mBookStyle == (BookEntry.STYLE_HARDBACK) ||
                 quantity == 1) {
+                  Toast.makeText(this, "All values required!", Toast.LENGTH_SHORT).show();
             return;
         }
 

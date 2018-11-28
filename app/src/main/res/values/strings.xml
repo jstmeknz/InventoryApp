@@ -71,4 +71,6 @@
     <string name="hint_supplier_phone">505-555-5055</string>
     <string name="hint_quantity">1</string>
 
+    <string name="toastText">Please enter required information and try again.</string>
+
 </resources>

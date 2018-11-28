@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.example.mackenzie.inventoryapp.R;
 
 import static com.example.mackenzie.inventoryapp.data.BookContract.BookEntry;
 import static com.example.mackenzie.inventoryapp.data.BookContract.CONTENT_AUTHORITY;
@@ -97,24 +100,22 @@ public class BookProvider extends ContentProvider {
         Integer style = values.getAsInteger(BookEntry.COLUMN_BOOK_STYLE);
 
         if (TextUtils.isEmpty(name)) {
-            throw new IllegalArgumentException("Book requires a title");
+            throw new IllegalArgumentException("Requires name");
         }
         if (TextUtils.isEmpty(author)) {
-            throw new IllegalArgumentException("Book requires author name");
+            throw new IllegalArgumentException("Requires author");
         }
         if (TextUtils.isEmpty(supplier)) {
-            throw new IllegalArgumentException("Supplier name needed");
+            throw new IllegalArgumentException("Requires supplier name");
         }
-        if (TextUtils.isEmpty(supplierNumber)){
-            throw new IllegalArgumentException("Supplier number needed");
+        if (TextUtils.isEmpty(supplierNumber)) {
+            throw new IllegalArgumentException("Requires supplier phone number");
         }
-        if (quantity == null && quantity < 1) {
-            throw new IllegalArgumentException("Book requires quantity to be listed");
+        if (quantity == null || quantity < 0) {
+            throw new IllegalArgumentException("Valid quantity required");
         }
-        if (style == null || !BookEntry.isValidStyle(style)) {
-            throw new IllegalArgumentException("Book requires valid style");
-        }
-        
+
+
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         long id = database.insert(BookEntry.TABLE_NAME, null, values);
@@ -126,6 +127,11 @@ public class BookProvider extends ContentProvider {
 
         return ContentUris.withAppendedId(uri, id);
     }
+
+//    private void breakBread(String toastText){
+//        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+//    }
+//
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -190,6 +196,7 @@ public class BookProvider extends ContentProvider {
                 throw new IllegalArgumentException("Book requires author name");
             }
         }
+
         if (values.containsKey(BookEntry.COLUMN_BOOK_STYLE)) {
             Integer style = values.getAsInteger(BookEntry.COLUMN_BOOK_STYLE);
             if (style == null || !BookEntry.isValidStyle(style)) {
@@ -202,6 +209,19 @@ public class BookProvider extends ContentProvider {
                 throw new IllegalArgumentException("Book requires valid quantity in stock");
             }
         }
+        if (values.containsKey(BookEntry.COLUMN_SUPPLIER)) {
+            String supplier = values.getAsString(BookEntry.COLUMN_SUPPLIER);
+            if (supplier == null) {
+                throw new IllegalArgumentException("Requires supplier name");
+            }
+        }
+        if (values.containsKey(BookEntry.COLUMN_SUPPLIER_PHONE)) {
+            String supplierPhone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE);
+            if (supplierPhone == null) {
+                throw new IllegalArgumentException("Requires supplier phone number");
+            }
+        }
+
         if (values.size() == 0) {
             return 0;
         }
@@ -211,7 +231,11 @@ public class BookProvider extends ContentProvider {
         int rowsUpdated = database.update(BookEntry.TABLE_NAME, values, selection, selectionArgs);
 
         if (rowsUpdated != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            try {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }catch (NullPointerException nullPointer){
+                Log.e(LOG_TAG, "Notify of change failed! " + nullPointer);
+            }
         }
         return rowsUpdated;
     }

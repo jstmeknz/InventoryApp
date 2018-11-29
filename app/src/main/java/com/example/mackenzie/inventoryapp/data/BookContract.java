@@ -27,10 +27,11 @@ public final class BookContract {
         public final static String COLUMN_SUPPLIER = "supplier";
         public final static String COLUMN_SUPPLIER_PHONE = "phone";
 
-        public static final int STYLE_HARDBACK = 0;
-        public static final int STYLE_PAPERBACK = 1;
-        public static final int STYLE_AUDIO = 2;
-        public static final int STYLE_DOWNLOAD = 3;
+        public static final int STYLE_UNKNOWN = 0;
+        public static final int STYLE_HARDBACK = 1;
+        public static final int STYLE_PAPERBACK = 2;
+        public static final int STYLE_AUDIO = 3;
+        public static final int STYLE_DOWNLOAD = 4;
 
         public static final String CONTENT_LIST_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BOOKS;
@@ -38,7 +39,8 @@ public final class BookContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BOOKS;
 
         public final static boolean isValidStyle(int style) {
-            return style == STYLE_HARDBACK ||
+            return style == STYLE_UNKNOWN ||
+                    style == STYLE_HARDBACK ||
                     style == STYLE_PAPERBACK ||
                     style == STYLE_AUDIO ||
                     style == STYLE_DOWNLOAD;

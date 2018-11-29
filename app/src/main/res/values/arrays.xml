@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="book_style_options">
+        <item>@string/book_style_unknown</item>
         <item>@string/book_style_hardback</item>
         <item>@string/book_style_paperback</item>
         <item>@string/book_style_audio</item>

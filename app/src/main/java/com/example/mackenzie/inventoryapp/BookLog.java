@@ -26,6 +26,8 @@ import static com.example.mackenzie.inventoryapp.data.BookContract.BookEntry._ID
 public class BookLog extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String LOG_TAG = BookLog.class.getSimpleName();
+
     private static final int BOOK_LOADER = 0;
     BookCursorAdapter mCursorAdapter;
 
@@ -68,6 +70,7 @@ public class BookLog extends AppCompatActivity implements
                 intent.setData(currentBookUri);
 
                 startActivity(intent);
+                Log.i(LOG_TAG, "Editor intent ~~~~~~~~~~~~~~~" + id);
             }
         });
 
@@ -101,13 +104,14 @@ public class BookLog extends AppCompatActivity implements
         ContentValues cv = new ContentValues();
         cv.put(BookEntry.COLUMN_BOOK_TITLE, " The Giver");
         cv.put(BookEntry.COLUMN_BOOK_AUTHOR, " Lois Lowry");
-        cv.put(BookEntry.COLUMN_BOOK_STYLE, " Paperback");
+        cv.put(BookEntry.COLUMN_BOOK_STYLE, 1);
         cv.put(BookEntry.COLUMN_PRICE, " 5.00");
         cv.put(BookEntry.COLUMN_QUANTITY, 3);
         cv.put(BookEntry.COLUMN_SUPPLIER, " The Book Guy");
         cv.put(BookEntry.COLUMN_SUPPLIER_PHONE, " 555-555-5555");
 
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, cv);
+        Log.i(LOG_TAG, "insertBook ~ ~ ~ ~ ~ ~ ~ ~");
     }
 
     //Deletes all data while preserving table schema
@@ -157,7 +161,7 @@ public class BookLog extends AppCompatActivity implements
             ContentValues values = new ContentValues();
             values.put(BookEntry.COLUMN_QUANTITY, quantity);
             Uri updateUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
-            int newQuantity = getContentResolver().update(updateUri, values, null, null);
+            getContentResolver().update(updateUri, values, null, null);
             Toast.makeText(this, "Book count decreased", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Stock count has reached 0, please reorder", Toast.LENGTH_SHORT).show();

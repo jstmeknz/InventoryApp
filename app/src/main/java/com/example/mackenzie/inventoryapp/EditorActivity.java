@@ -35,7 +35,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     //initializing the following:
     private static final int EXISTING_BOOK_LOADER = 0;
-    int quantity = 1;
+    int quantity;
     private Uri mCurrentBookUri;
     private EditText mBookTitleEditText;
     private EditText mBookAuthorEditText;
@@ -50,7 +50,6 @@ public class EditorActivity extends AppCompatActivity implements
     private int mBookStyle = BookEntry.STYLE_HARDBACK;
 
     private boolean mBookHasChanged = false;
-    private boolean check = true;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -145,23 +144,21 @@ public class EditorActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.book_style_hardback))) {
-                        mBookStyle = BookEntry.STYLE_HARDBACK;
-                    } else if (selection.equals(getString(R.string.book_style_paperback))) {
-                        mBookStyle = BookEntry.STYLE_PAPERBACK;
-                    } else if (selection.equals(getString(R.string.book_style_audio))) {
-                        mBookStyle = BookEntry.STYLE_AUDIO;
-                    } else if (selection.equals(getString(R.string.book_style_download))) {
-                        mBookStyle = BookEntry.STYLE_DOWNLOAD;
-                    }
+                if (selection.equals(getString(R.string.book_style_hardback))) {
+                    mBookStyle = BookEntry.STYLE_HARDBACK;
+                } else if (selection.equals(getString(R.string.book_style_paperback))) {
+                    mBookStyle = BookEntry.STYLE_PAPERBACK;
+                } else if (selection.equals(getString(R.string.book_style_audio))) {
+                    mBookStyle = BookEntry.STYLE_AUDIO;
+                } else if (selection.equals(getString(R.string.book_style_download))) {
+                    mBookStyle = BookEntry.STYLE_DOWNLOAD;
                 }
             }
 
             //sets style to hardback if nothing is selected
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mBookStyle = BookEntry.STYLE_HARDBACK;
+                mBookStyle = BookEntry.STYLE_UNKNOWN;
             }
         });
     }
@@ -184,11 +181,11 @@ public class EditorActivity extends AppCompatActivity implements
         int quantityCount;
         String bookQuantity = mCurrentQuantityView.getText().toString();
         if (TextUtils.isEmpty(bookQuantity)) {
-            Toast.makeText(this, "Quantity cannot be negative.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Quantity has reached 0.", Toast.LENGTH_SHORT).show();
             return bookQuantity;
         } else {
             quantityCount = Integer.parseInt(bookQuantity);
-            if (quantityCount > 0)
+            if (quantityCount >= 1)
                 quantityCount--;
         }
         return String.valueOf(quantityCount);
@@ -272,18 +269,10 @@ public class EditorActivity extends AppCompatActivity implements
         String supplierString = mSupplier.getText().toString().trim();
         String supplierPhoneString = mSupplierPhone.getText().toString().trim();
 
-        //check if this is a new book entry and make sure all fields are blank in editor
-//        if (mCurrentBookUri == null &&
-              if  (TextUtils.isEmpty(titleString) ||
-                TextUtils.isEmpty(authorString) ||
-                TextUtils.isEmpty(priceString) ||
-                TextUtils.isEmpty(currentQuantity) ||
-                TextUtils.isEmpty(supplierString) ||
-                TextUtils.isEmpty(supplierPhoneString) ||
-                mBookStyle == (BookEntry.STYLE_HARDBACK) ||
-                quantity == 1) {
-                  Toast.makeText(this, "All values required!", Toast.LENGTH_SHORT).show();
-           check = false;
+        //Check that all required fields are filled in and if not, notify user
+        if (TextUtils.isEmpty(titleString) || (TextUtils.isEmpty(authorString)) ||
+                (TextUtils.isEmpty(priceString)) || (TextUtils.isEmpty(supplierString)) || (TextUtils.isEmpty(supplierPhoneString))) {
+            Toast.makeText(this, "Some fields are required", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -306,12 +295,10 @@ public class EditorActivity extends AppCompatActivity implements
                 //if new URI is null there was an error
                 Toast.makeText(this, getString(R.string.editor_insert_book_failed),
                         Toast.LENGTH_SHORT).show();
-                check = false;
             } else {
                 //show successful toast
                 Toast.makeText(this, getString(R.string.editor_book_added),
                         Toast.LENGTH_SHORT).show();
-                check = true;
             }
         } else {
             int rowsAffected = getContentResolver().update(mCurrentBookUri, values, null, null);
@@ -326,6 +313,7 @@ public class EditorActivity extends AppCompatActivity implements
                 Toast.makeText(this, getString(R.string.editor_update_book_successful),
                         Toast.LENGTH_SHORT).show();
             }
+            finish();
         }
     }
 
@@ -479,6 +467,9 @@ public class EditorActivity extends AppCompatActivity implements
             mCurrentQuantityView.setText(Integer.toString(quantity));
 
             switch (bookStyle) {
+//                case BookEntry.STYLE_UNKNOWN:
+//                    mBookStyleSpinner.setSelection(0);
+//                    break;
                 case BookEntry.STYLE_HARDBACK:
                     mBookStyleSpinner.setSelection(1);
                     break;

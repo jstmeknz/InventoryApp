@@ -9,9 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.example.mackenzie.inventoryapp.R;
 
 import static com.example.mackenzie.inventoryapp.data.BookContract.BookEntry;
 import static com.example.mackenzie.inventoryapp.data.BookContract.CONTENT_AUTHORITY;
@@ -125,14 +122,9 @@ public class BookProvider extends ContentProvider {
         return ContentUris.withAppendedId(uri, id);
     }
 
-//    private void breakBread(String toastText){
-//        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
-//    }
-//
-
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Get writeable database
+        // Get writable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         // Track the number of rows that were deleted
@@ -179,6 +171,13 @@ public class BookProvider extends ContentProvider {
         }
     }
 
+    /**
+     * @param uri
+     * @param values
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     private int updateBook(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
         if (values.containsKey(BookEntry.COLUMN_BOOK_TITLE)) {
@@ -230,7 +229,7 @@ public class BookProvider extends ContentProvider {
         if (rowsUpdated != 0) {
             try {
                 getContext().getContentResolver().notifyChange(uri, null);
-            }catch (NullPointerException nullPointer){
+            } catch (NullPointerException nullPointer) {
                 Log.e(LOG_TAG, "Notify of change failed! " + nullPointer);
             }
         }

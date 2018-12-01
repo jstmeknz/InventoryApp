@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -161,14 +160,10 @@
 
             <TextView
                 android:id="@+id/quantity"
+                style="@style/quantity_text_view_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:hint="00"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColorHint="#ffd54f" />
+                android:hint="00" />
 
             <Button
                 android:id="@+id/add_button"
@@ -194,12 +189,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- Label -->
+        <!-- Supplier section -->
         <TextView
             style="@style/CategoryStyle"
             android:text="Supplier" />
 
-        <!-- Input fields -->
+        <!-- Supplier Input fields -->
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -214,7 +209,6 @@
 
             <EditText
                 android:id="@+id/edit_supplier_phone"
-
                 style="@style/EditorFieldStyle"
                 android:layout_width="wrap_content"
                 android:layout_below="@id/edit_supplier_name"
@@ -234,10 +228,9 @@
                 android:layout_toEndOf="@+id/edit_supplier_phone"
                 android:background="#5bffd54f"
                 android:contentDescription="Call Supplier at number listed"
-                android:text="reorder" />
+                android:padding="4dp"
+                android:text="call to reorder" />
         </RelativeLayout>
     </LinearLayout>
-
-
 </LinearLayout>
 

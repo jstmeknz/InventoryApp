@@ -103,7 +103,7 @@ public class EditorActivity extends AppCompatActivity implements
         mSubtractButton = (Button) findViewById(R.id.subtract_button);
         mCallButton = (Button) findViewById(R.id.call_button);
 
-        //increment/decrement buttons
+        //increment/decrement button listeners
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -270,8 +270,11 @@ public class EditorActivity extends AppCompatActivity implements
         String supplierPhoneString = mSupplierPhone.getText().toString().trim();
 
         //Check that all required fields are filled in and if not, notify user
-        if (TextUtils.isEmpty(titleString) || (TextUtils.isEmpty(authorString)) ||
-                (TextUtils.isEmpty(priceString)) || (TextUtils.isEmpty(supplierString)) || (TextUtils.isEmpty(supplierPhoneString))) {
+        if (TextUtils.isEmpty(titleString) ||
+                (TextUtils.isEmpty(authorString)) ||
+                (TextUtils.isEmpty(priceString)) ||
+                (TextUtils.isEmpty(supplierString)) ||
+                (TextUtils.isEmpty(supplierPhoneString))) {
             Toast.makeText(this, "Some fields are required", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -467,9 +470,9 @@ public class EditorActivity extends AppCompatActivity implements
             mCurrentQuantityView.setText(Integer.toString(quantity));
 
             switch (bookStyle) {
-//                case BookEntry.STYLE_UNKNOWN:
-//                    mBookStyleSpinner.setSelection(0);
-//                    break;
+                case BookEntry.STYLE_UNKNOWN:
+                    mBookStyleSpinner.setSelection(0);
+                    break;
                 case BookEntry.STYLE_HARDBACK:
                     mBookStyleSpinner.setSelection(1);
                     break;
@@ -500,5 +503,4 @@ public class EditorActivity extends AppCompatActivity implements
         mSupplierPhone.setText("");
         mBookStyleSpinner.setSelection(0);
     }
-
 }

@@ -7,7 +7,6 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +16,7 @@
         android:paddingTop="18dp"
         android:paddingBottom="14dp">
 
+        <!-- Info block -->
         <LinearLayout
             android:layout_width="140dp"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 android:fontFamily="sans-serif"
                 android:textColor="#000000"
                 android:textSize="20sp"
-                android:textStyle="italic"
+                android:textStyle="bold"
                 tools:text="Title Here" />
 
             <TextView
@@ -56,7 +56,6 @@
                 android:textSize="14sp"
                 tools:text="Hardback" />
 
-
             <TextView
                 android:id="@+id/book_price"
                 android:layout_width="wrap_content"
@@ -69,14 +68,13 @@
                 android:textStyle="bold"
                 tools:text="$5.00" />
 
-
         </LinearLayout>
 
+        <!-- Right side info and button block -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -146,11 +144,7 @@
                         android:textSize="12sp"
                         tools:text="5055555505" />
                 </LinearLayout>
-
             </RelativeLayout>
-
         </LinearLayout>
-
     </LinearLayout>
-
 </LinearLayout>

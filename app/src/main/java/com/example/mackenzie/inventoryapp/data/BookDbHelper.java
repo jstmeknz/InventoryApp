@@ -39,9 +39,9 @@ public class BookDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_BOOKS_TABLE);
     }
 
+    //(address this in upcoming code improvements)
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-
 }

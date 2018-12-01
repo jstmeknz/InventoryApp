@@ -171,13 +171,6 @@ public class BookProvider extends ContentProvider {
         }
     }
 
-    /**
-     * @param uri
-     * @param values
-     * @param selection
-     * @param selectionArgs
-     * @return
-     */
     private int updateBook(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
         if (values.containsKey(BookEntry.COLUMN_BOOK_TITLE)) {
@@ -248,5 +241,4 @@ public class BookProvider extends ContentProvider {
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
     }
-
 }

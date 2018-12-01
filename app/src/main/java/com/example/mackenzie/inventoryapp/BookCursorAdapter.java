@@ -55,7 +55,7 @@ public class BookCursorAdapter extends CursorAdapter {
         final String bookId = cursor.getString(idIndex);
 
         if (TextUtils.isEmpty(bookStyle)) {
-            bookStyle = context.getString(R.string.book_style_hardback);
+            bookStyle = context.getString(R.string.book_style_unknown);
         }
 
         //sale decrement button listener
@@ -68,7 +68,7 @@ public class BookCursorAdapter extends CursorAdapter {
             }
         });
 
-        //sets text for viewing
+        //sets text for views
         titleView.setText(bookTitle);
         authorView.setText(author);
         styleView.setText(bookStyle);

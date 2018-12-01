@@ -42,7 +42,7 @@
     <!-- Subtitle text for the empty view that prompts the user to add a book [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Get started by adding a book</string>
     <string name="edit_book_title">Edit Book</string>
-    <string name="editor_insert_book_failed">Error</string>
+    <string name="editor_insert_book_failed">Error inserting book</string>
     <string name="editor_update_book_successful">Edit successful!</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
@@ -64,15 +64,14 @@
     <!-- Dialog button text for the option to cancel deletion of the current book [CHAR LIMIT=20] -->
     <string name="cancel">Cancel</string>
 
+    <!-- Hint texts -->
     <string name="hint_book_author">Author</string>
     <string name="hint_book_price">0.00</string>
     <string name="hint_supplier_name">Name</string>
     <string name="hint_supplier_phone">505-555-5055</string>
     <string name="hint_quantity">1</string>
-
-    <string name="toastText">Please enter required information and try again.</string>
-    <string name="category_author">Author</string>
-
     <string name="hint_book_name">Name</string>
+
+    <string name="category_author">Author</string>
 
 </resources>

@@ -167,5 +167,4 @@ public class BookLog extends AppCompatActivity implements
             Toast.makeText(this, "Stock count has reached 0, please reorder", Toast.LENGTH_SHORT).show();
         }
     }
-
 }
